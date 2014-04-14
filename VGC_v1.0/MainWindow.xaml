@@ -1,0 +1,103 @@
+﻿<Window x:Class="VGC_v1._0.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:VGC_v1._0"
+        Title="MainWindow" MinHeight="350" MinWidth="525" WindowState="Maximized" WindowStyle="None">
+    <Window.Resources>
+        <local:ViewMoveEvents x:Key="moves"/>
+
+        <!-- MoveThumb template-->
+        <ControlTemplate x:Key="MoveThumbTemplate" TargetType="{x:Type local:MoveThumb}">
+            <Rectangle Fill="Transparent"/>
+        </ControlTemplate>
+
+        <!-- DragableObject control template-->
+        <ControlTemplate x:Key="DragableObject" TargetType="ContentControl">
+            <Grid DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                <local:MoveThumb Template="{StaticResource MoveThumbTemplate}" Cursor="SizeAll"/>
+                <ContentPresenter Content="{TemplateBinding ContentControl.Content}"/>
+            </Grid>
+        </ControlTemplate>
+
+        <!--MoveEvent template-->
+        <DataTemplate x:Key="moveEvent">
+            <Grid Height="25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Stretch">
+                    <TextBlock Grid.Column="0" Text="{Binding Path=MoveID}" HorizontalAlignment="Center"></TextBlock>
+                </Border>
+                <Canvas Grid.Column="1">
+                    <ContentControl  Template="{StaticResource DragableObject}" Canvas.Left="{Binding Path=Left}" Canvas.Top="{Binding Path=Top}">
+                        <Rectangle  Width="{Binding Path=Lenght}" Height="25" Fill="BurlyWood" IsHitTestVisible="False"></Rectangle>
+                    </ContentControl>
+                </Canvas>
+            </Grid>
+        </DataTemplate>
+
+
+    </Window.Resources>
+    <DockPanel>
+
+        <!-- menu and sidebar-->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="New"/>
+                <MenuItem Header="Open"/>
+                <MenuItem Header="Save"/>
+                <Separator/>
+                <MenuItem Header="Close"/>
+            </MenuItem>
+            <MenuItem Header="Help"/>
+        </Menu>
+        <StatusBar DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+            <Label Padding="0,0,0,0" FontSize="9">VGC</Label>
+            <Label Padding="0,0,0,0" FontSize="9">Status:</Label>
+            <Label Padding="0,0,0,0" FontSize="9" Name="status">Offline</Label>
+        </StatusBar>
+        <StackPanel DockPanel.Dock="Left" Width="85" Orientation="Vertical">
+            <Label FontSize="15">Properities</Label>
+            <Separator/>
+            <Label>Start:</Label>
+            <TextBox Name="startTime"></TextBox>
+
+            <Label>Stop:</Label>
+            <TextBox Name="stopTime"></TextBox>
+
+            <Label>End Height:</Label>
+            <TextBox Name="endHeight"></TextBox>
+
+            <Label>Speed</Label>
+            <TextBox Name="speed"></TextBox>
+            <Button>OK</Button>
+        </StackPanel>
+
+        <!--timeline window-->
+        <Grid Margin="5,5,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button>NIC</Button>
+                    <Button Grid.Column="1">TIMELINE</Button>
+                </Grid>
+            </StackPanel>
+            <StackPanel Grid.Row="1">
+                <ItemsControl 
+            		ItemsSource="{Binding Source={StaticResource moves}}"
+            		ItemTemplate="{Binding Source={StaticResource moveEvent}}"
+            		VerticalAlignment="Stretch"
+            		HorizontalAlignment="Stretch"/>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+
+</Window>
